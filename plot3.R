@@ -1,0 +1,21 @@
+getwd()
+DataFile <- "household_power_consumption.txt"
+Data <- read.table(DataFile, header=TRUE, sep=";")
+head(Data)
+names(Data)
+
+Subset_Data <- subset(Data, Data$Date=="1/2/2007" | Data$Date=="2/2/2007")
+head(Subset_Data)
+Subset_Data$Time <- strptime(paste(Subset_Data$Date, Subset_Data$Time, sep=" "), "%d/%m/%Y %H:%M:%S") 
+Global_active_power <- as.character(Subset_Data$Global_active_power)
+SubMetering1 <- as.character(Subset_Data$Sub_metering_1)
+SubMetering2 <- as.character(Subset_Data$Sub_metering_2)
+SubMetering3 <- as.character(Subset_Data$Sub_metering_3)
+
+png("plot3.png", width=480, height=480)
+plot(Subset_Data$Time, as.numeric(SubMetering1), type="l", ylab="Energy Submetering", xlab="")
+lines(Subset_Data$Time, as.numeric(SubMetering2), type="l", col="red")
+lines(Subset_Data$Time, as.numeric(SubMetering3), type="l", col="blue")
+legend("topright", c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"),
+       lty=1, lwd=2.5, col=c("black", "red", "blue"))
+dev.off()
